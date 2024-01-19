@@ -12,7 +12,6 @@ const SignUp = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
-  console.log(formData);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,7 +35,7 @@ const SignUp = () => {
       }
       setLoading(false);
       if (response.ok) {
-        navigate("/");
+        navigate("/sign-in");
       }
     } catch (error) {
       setErrorMessage(error.message);
