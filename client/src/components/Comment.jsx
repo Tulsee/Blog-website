@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import moment from "moment";
+import { FaThumbsUp } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
-const Comment = ({ comment }) => {
-  const { userId } = comment;
-
+const Comment = ({ comment, onLike }) => {
   const [user, setUser] = useState({});
+
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     const getUser = async () => {
       try {
-        const response = await fetch(`/api/user/${userId}`);
+        const response = await fetch(`/api/user/${comment.userId}`);
         if (response.ok) {
           const data = await response.json();
           setUser(data);
@@ -20,7 +22,7 @@ const Comment = ({ comment }) => {
     };
     getUser();
   }, [comment]);
-  console.log(user);
+  console.log("hghvbvgh", comment);
   return (
     <div className="flex p-4 border-b dark:border-gray-600 text-sm">
       <div className="flex-shrink-0 mr-3">
@@ -40,6 +42,25 @@ const Comment = ({ comment }) => {
           </span>
         </div>
         <p className="text-gray-500 pb-2">{comment.content}</p>
+        <div className="flex items-center pt-2 text-xs border-t dark:border-gray-700 max-w-fit gap-2">
+          <button
+            type="button"
+            onClick={() => onLike(comment._id)}
+            className={`text-gray-400 hover:text-blue-400 dark:hover:text-blue-500 ${
+              currentUser &&
+              comment.likes.includes(currentUser._id) &&
+              "!text-blue-500"
+            }`}
+          >
+            <FaThumbsUp className="text-sm" />
+          </button>
+          <p className="text-gray-400">
+            {comment.numberOfLikes > 0 &&
+              comment.numberOfLikes +
+                " " +
+                (comment.numberOfLikes === 1 ? "Like" : "Likes")}
+          </p>
+        </div>
       </div>
     </div>
   );
